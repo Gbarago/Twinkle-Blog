@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "244189764201",
+    "project_id": "twinkleblog",
+    "storage_bucket": "twinkleblog.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:244189764201:android:12c3eb22f9f7fbf3e4a0f8",
+        "android_client_info": {
+          "package_name": "com.example.twinkle_assesment_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "244189764201-2vonvi8u45qfql97b35nt75sb2iejep5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGxC3lFW129KmXSOiCumbyjjoWfhtyzv8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "244189764201-2vonvi8u45qfql97b35nt75sb2iejep5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
