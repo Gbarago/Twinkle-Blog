@@ -1,6 +1,7 @@
 import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
-import 'package:firebase_storage/firebase_storage.dart';
+//import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -21,42 +22,58 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
 
   File? selectedImage;
 
+  final List<firebase_storage.UploadTask> _uploadTasks = [];
+
   bool _isLoading = false;
   CrudMethods crudMethods = CrudMethods();
 
   Future getImage() async {
-    var image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
 
     setState(() {
       selectedImage = File(image!.path); // won't have any error now
     });
   }
 
-  uploadContent() async {
+  // uploadContent() async {
+  Future<firebase_storage.UploadTask?> uploadFile(File? selectedImage) async {
     if (selectedImage != null) {
       setState(() {
         _isLoading = true;
       });
-//image Upload to fireBase
-      Reference firebaseStoragrRef = FirebaseStorage.instance
+      firebase_storage.UploadTask uploadTask;
+
+      print('pagep page page');
+
+      // Create a Reference to the file
+      firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
           .ref()
-          .child('blogimage')
-          .child('${randomAlphaNumeric(9)}.jpg');
-      UploadTask task =
-          firebaseStoragrRef.child(toString() + ".jpg").putFile(selectedImage!);
-      // firebaseStoragrRef.putFile(selectedImage!);
-      TaskSnapshot taskSnapshot = await task;
+          .child('playground')
+          .child('/some-image.jpg');
 
-      var downloadUrl = await (await task).ref.getDownloadURL();
-      var url = downloadUrl.toString();
-      print(url);
-      print('tis is the url $downloadUrl');
-    } else {}
+      final metadata = firebase_storage.SettableMetadata(
+          contentType: 'image/jpeg',
+          customMetadata: {'${randomAlphaNumeric(9)}.jpg': selectedImage.path});
+
+      if (kIsWeb) {
+        uploadTask = ref.putData(await selectedImage.readAsBytes(), metadata);
+      } else {
+        uploadTask = ref.putFile(selectedImage, metadata);
+      }
+
+      if (kDebugMode) {
+        print('check for obkrcyhere');
+      }
+      return Future.value(uploadTask);
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text('No file was selected'),
+    ));
+
+    return null;
   }
-
-  //
-  //
-//
+//  }
 
   Future getImag() async {
     var image = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -66,7 +83,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     });
   }
 
-  File? safeNeuralNetwork;
+  // File? safeNeuralNetwork;
 
 //
   @override
@@ -77,9 +94,19 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       child: Scaffold(
         body: SingleChildScrollView(
           child: _isLoading
-              ? Container(
-                  alignment: Alignment.center,
-                  child: CircularProgressIndicator(),
+              ? Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: height * 0.4,
+                    ),
+                    Center(
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                  ],
                 )
               : Container(
                   padding: EdgeInsets.symmetric(horizontal: width * 0.05),
@@ -110,7 +137,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                             width: width * 0.15,
                           ),
                           TextButton(
-                            onPressed: uploadContent,
+                            onPressed: () => uploadFile(selectedImage),
+                            //uploadContent,
                             child: const Text(
                               'Save',
                               style: TextStyle(
@@ -138,7 +166,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                             : Container(
                                 height: height * 0.2,
                                 width: width,
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                   color: Color(0xffEFEFEF),
                                 ),
                                 child: const Icon(
@@ -248,6 +276,24 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
 
 
 
+//Ltest Version1
 
+//   if (selectedImage != null) {
+//       setState(() {
+//         _isLoading = true;
+//       });
+// //image Upload to fireBase
+//       Reference firebaseStoragrRef = FirebaseStorage.instance
+//           .ref()
+//           .child('blogimage')
+//           .child('${randomAlphaNumeric(9)}.jpg');
+//       UploadTask task =
+//           firebaseStoragrRef.child(toString() + ".jpg").putFile(selectedImage!);
+//       // firebaseStoragrRef.putFile(selectedImage!);
+//       TaskSnapshot taskSnapshot = await task;
 
-
+//       var downloadUrl = await (await task).ref.getDownloadURL();
+//       var url = downloadUrl.toString();
+//       print(url);
+//       print('tis is the url $downloadUrl');
+//     } else {}

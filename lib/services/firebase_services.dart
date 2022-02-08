@@ -10,3 +10,9 @@ class CrudMethods {
     });
   }
 }
+
+class Teston {
+  void printTest() {
+    print('ddedeed');
+  }
+}
